@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('filiere_id')->constrained()->onDelete('cascade');
             $table->foreignId('niveau_id')->constrained()->onDelete('cascade');
             $table->string('annee_academique');
-            $table->string('photo');
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }

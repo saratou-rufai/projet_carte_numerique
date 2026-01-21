@@ -4,61 +4,95 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Etudiant;
-
+use Illuminate\Support\Facades\Storage;
 
 class EtudiantController extends Controller
 {
-    //Afficher la liste des etudiant avec leur relation(filiere, niveau, carte) avec index
-    //enreistrer un nouveau etudiant avec store
-    //validation des donnee recue du formulare avec validate
-    //creation d'un etudiant avec create
-    //afficher les information d'un etudiant precis avec show
-    //mettre a jour un etudiant existant avec update
-    //supprimer un etudiant
 
+      //Affiche la liste des étudiants.
     public function index()
     {
-        return Etudiant::with(['filiere', 'niveau', 'carte'])->get();
+        // On récupère les étudiants avec leurs relations
+        $etudiants = Etudiant::with(['filiere', 'niveau', 'carte'])->get();
+        return view('admin.etudiants.index', compact('etudiants'));
     }
 
+     //Enregistre un nouvel étudiant.
     public function store(Request $request)
     {
-        $request->validate([
-            'INE' => 'required|unique:etudiants',
-            'nom_complet' => 'required',
+        // 1. Validation : On isole les données validées pour éviter le "Mass Assignment"
+        $validated = $request->validate([
+            'INE' => 'required|unique:etudiants,INE',
+            'nom_complet' => 'required|string|max:255',
             'filiere_id' => 'required|exists:filieres,id',
             'niveau_id' => 'required|exists:niveaux,id',
-            'annee_academique' => 'required',
-            'photo' => 'required'
+            'annee_academique' => 'required|string',
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        return Etudiant::create($request->all());
+        // 2. Gestion de l'upload : Stockage physique du fichier
+        if ($request->hasFile('photo')) {
+            // Enregistre dans storage/app/public/photos
+            $path = $request->file('photo')->store('photos', 'public');
+            $validated['photo'] = $path;
+        }
+
+        // 3. Création en base de données
+        Etudiant::create($validated);
+
+        return redirect()->route('etudiants.index')
+                         ->with('success', 'Étudiant enregistré avec succès.');
     }
+
+    
+      //Affiche les détails d'un étudiant.
 
     public function show(Etudiant $etudiant)
     {
-        return $etudiant->load(['filiere', 'niveau', 'carte']);
+        $etudiant->load(['filiere', 'niveau', 'carte']);
+        return view('admin.etudiants.show', compact('etudiant'));
     }
+
+
+      //Met à jour les informations d'un étudiant.
 
     public function update(Request $request, Etudiant $etudiant)
     {
-        $request->validate([
-            'INE' => 'required|unique:etudiants,INE,' . $etudiant->id
+        $validated = $request->validate([
+            'INE' => 'required|unique:etudiants,INE,' . $etudiant->id,
+            'nom_complet' => 'required|string|max:255',
+            'filiere_id' => 'required|exists:filieres,id',
+            'niveau_id' => 'required|exists:niveaux,id',
+            'annee_academique' => 'required|string',
+            'photo' => 'nullable|image|max:2048'
         ]);
 
-        $etudiant->update($request->all());
+        if ($request->hasFile('photo')) {
+            // On supprime l'ancien fichier pour ne pas encombrer le serveur
+            if($etudiant->photo) {
+                Storage::disk('public')->delete($etudiant->photo);
+            }
+            $validated['photo'] = $request->file('photo')->store('photos', 'public');
+        }
 
-        return $etudiant;
+        $etudiant->update($validated);
+
+        return redirect()->route('etudiants.index')
+                         ->with('success', 'Informations mises à jour.');
     }
+
+
+     //Supprime un étudiant et son fichier photo.
 
     public function destroy(Etudiant $etudiant)
     {
+        if($etudiant->photo) {
+            Storage::disk('public')->delete($etudiant->photo);
+        }
+
         $etudiant->delete();
 
-        return [
-            'message' => 'Étudiant supprimé avec succès'
-        ];
+        return redirect()->route('etudiants.index')
+                         ->with('success', 'Étudiant supprimé.');
     }
 }
-
-

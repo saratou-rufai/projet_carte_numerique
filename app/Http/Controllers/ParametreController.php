@@ -8,60 +8,72 @@ use Illuminate\Http\Request;
 class ParametreController extends Controller
 {
 
-     //Affiche tous les paramètres
-     //creation d'un nouveau parametreavec store
-     //affichage d'un parametre precis avec show
-     //mise a jour d'un parametre precis
-     // //mise a jour du parametre
-     //suppression d'un paramettre
+     //Affiche la liste de tous les paramètres système.
+
     public function index()
     {
-        return Parametre::all();
+        $parametres = Parametre::all();
+        return view('admin.parametres.index', compact('parametres'));
     }
+
+
+     //Affiche le formulaire pour créer un nouveau paramètre.
+
+    public function create()
+    {
+        return view('admin.parametres.create');
+    }
+
+
+     //Enregistre le paramètre dans la base de données.
 
     public function store(Request $request)
     {
-        $request->validate([
-            'cle' => 'required|unique:parametres',
-            'valeur' => 'required',
+        $validated = $request->validate([
+            'cle' => 'required|unique:parametres,cle',
+            'valeur' => 'required|string',
             'description' => 'nullable|string'
         ]);
 
-        return Parametre::create([
-            'cle' => $request->cle,
-            'valeur' => $request->valeur,
-            'description' => $request->description
-        ]);
+        Parametre::create($validated);
+
+        return redirect()->route('parametres.index')
+                         ->with('success', 'Paramètre créé avec succès.');
     }
 
-    public function show(Parametre $parametre)
+
+     //Affiche le formulaire de modification.
+
+    public function edit(Parametre $parametre)
     {
-        return $parametre;
+        return view('admin.parametres.edit', compact('parametre'));
     }
+
+
+     //Met à jour un paramètre spécifique.
 
     public function update(Request $request, Parametre $parametre)
     {
-        $request->validate([
+        $validated = $request->validate([
             'cle' => 'required|unique:parametres,cle,' . $parametre->id,
-            'valeur' => 'required',
+            'valeur' => 'required|string',
+            'description' => 'nullable|string'
         ]);
 
-        $parametre->update([
-            'cle' => $request->cle,
-            'valeur' => $request->valeur,
-            'description' => $request->description
-        ]);
+        $parametre->update($validated);
 
-        return $parametre;
+        return redirect()->route('parametres.index')
+                         ->with('success', 'Paramètre mis à jour.');
     }
 
+
+     //Supprime un paramètre.
     
     public function destroy(Parametre $parametre)
     {
         $parametre->delete();
 
-        return [
-            'message' => 'Paramètre supprimé avec succès'
-        ];
+        return redirect()->route('parametres.index')
+                         ->with('success', 'Paramètre supprimé.');
     }
 }

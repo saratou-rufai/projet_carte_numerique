@@ -8,66 +8,74 @@ use Illuminate\Http\Request;
 class NiveauController extends Controller
 {
 
-     //Affiche la liste de tous les niveaux
-     // Récupère tous les niveaux de la base de données
-      //Enregistre un nouveau niveau
-       // Validation : nom obligatoire et unique
-       // Création du niveau
-        // Retour du niveau créé
-        //Met à jour un niveau existant
-        // Validation avec exclusion de l’ID courant
-         // Mise à jour
-         // Supprime un niveau
-         // Suppression du niveau (les étudiants liés seront supprimés via cascade)
+     //Affiche la liste des niveaux (L1, L2, Master, etc.)
 
     public function index()
     {
-        return response()->json(Niveau::all());
+        $niveaux = Niveau::all();
+        return view('admin.niveaux.index', compact('niveaux'));
     }
+
+
+     //Affiche le formulaire de création
+
+    public function create()
+    {
+        return view('admin.niveaux.create');
+    }
+
+
+     //Enregistre le niveau
+
     public function store(Request $request)
     {
-        $request->validate([
-            'nom_niveau' => 'required|string|unique:niveaux'
+        $validated = $request->validate([
+            'nom_niveau' => 'required|string|unique:niveaux,nom_niveau'
         ], [
             'nom_niveau.required' => 'Le nom du niveau est obligatoire.',
             'nom_niveau.unique' => 'Ce niveau existe déjà.'
         ]);
 
+        Niveau::create($validated);
 
-        $niveau = Niveau::create([
-            'nom_niveau' => $request->nom_niveau
-        ]);
-
-
-        return response()->json($niveau, 201);
+        return redirect()->route('niveaux.index')
+                         ->with('success', 'Niveau ajouté avec succès.');
     }
+
+
+     //Affiche le formulaire de modification
+
+    public function edit(Niveau $niveau)
+    {
+        return view('admin.niveaux.edit', compact('niveau'));
+    }
+
+
+      //Met à jour le niveau
 
     public function update(Request $request, Niveau $niveau)
     {
-
-        $request->validate([
+        $validated = $request->validate([
             'nom_niveau' => 'required|string|unique:niveaux,nom_niveau,' . $niveau->id
         ], [
             'nom_niveau.required' => 'Le nom du niveau est obligatoire.',
             'nom_niveau.unique' => 'Ce niveau existe déjà.'
         ]);
 
+        $niveau->update($validated);
 
-        $niveau->update([
-            'nom_niveau' => $request->nom_niveau
-        ]);
-
-        return response()->json($niveau);
+        return redirect()->route('niveaux.index')
+                         ->with('success', 'Niveau mis à jour.');
     }
 
 
+     //Supprime le niveau
+     
     public function destroy(Niveau $niveau)
     {
-
         $niveau->delete();
 
-        return response()->json([
-            'message' => 'Niveau supprimé avec succès'
-        ]);
+        return redirect()->route('niveaux.index')
+                         ->with('success', 'Niveau supprimé avec succès.');
     }
 }
