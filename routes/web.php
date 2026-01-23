@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\CarteController;
-use App\Http\Controllers\HistoriqueCarteController;
+use App\Http\Controllers\HistoriqueController;
 use App\Http\Controllers\ConnexionController;
 use App\Http\Controllers\FiliereController;
 use App\Http\Controllers\NiveauController;
@@ -119,7 +119,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // ================= HISTORIQUE DES CARTES =================
-    Route::get('/historique-cartes', [HistoriqueCarteController::class, 'index'])
+    Route::get('/historique-cartes', [HistoriqueController::class, 'index'])
         ->name('historique_cartes.index');
 
 // ================= ROUTE PUBLIQUE =================
