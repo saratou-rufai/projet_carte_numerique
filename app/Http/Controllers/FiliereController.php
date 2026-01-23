@@ -7,71 +7,58 @@ use Illuminate\Http\Request;
 
 class FiliereController extends Controller
 {
-
-     //Affiche la liste des filières.
-
+    // 🔹 Afficher toutes les filières
     public function index()
     {
         $filieres = Filiere::all();
-        // On range les vues dans admin/filieres pour plus de clarté
-        return view('admin.filieres.index', compact('filieres'));
+        return view('filieres.index', compact('filieres'));
     }
 
-
-      //Affiche le formulaire pour ajouter une filière.
-
+    // 🔹 Formulaire de création
     public function create()
     {
-        return view('admin.filieres.create');
+        return view('filieres.creer');
     }
 
-
-     //Enregistre la filière.
-
+    // 🔹 Enregistrer une nouvelle filière
     public function store(Request $request)
     {
-        // On valide et on récupère les données propres
-        $validated = $request->validate([
-            'nom_filiere' => 'required|string|unique:filieres,nom_filiere'
+        $request->validate([
+            'libelle' => 'required|string|max:100|unique:filieres,libelle',
         ]);
 
-        Filiere::create($validated);
+        Filiere::create([
+            'libelle' => $request->libelle,
+        ]);
 
-        return redirect()->route('filieres.index')
-                         ->with('success', 'La filière a été ajoutée.');
+        return redirect()->route('parametres.index')->with('success', 'Filière créée avec succès.');
     }
 
-
-     //Affiche le formulaire de modification.
-
+    // 🔹 Formulaire d'édition
     public function edit(Filiere $filiere)
     {
-        return view('admin.filieres.edit', compact('filiere'));
+        return view('parametres.filieres.modifier', compact('filiere'));
     }
 
-
-      //Met à jour la filière.
-
+    // 🔹 Mettre à jour une filière
     public function update(Request $request, Filiere $filiere)
     {
-        $validated = $request->validate([
-            'nom_filiere' => 'required|string|unique:filieres,nom_filiere,' . $filiere->id
+        $request->validate([
+            'libelle' => 'required|string|max:100|unique:filieres,libelle,' . $filiere->id,
         ]);
 
-        $filiere->update($validated);
+        $filiere->update([
+            'libelle' => $request->libelle,
+        ]);
 
-        return redirect()->route('filieres.index')
-                         ->with('success', 'Filière mise à jour.');
+        return redirect()->route('parametres.index')->with('success', 'Filière mise à jour avec succès.');
     }
 
-
-     //Supprime la filière.
-     
+    // 🔹 Supprimer une filière
     public function destroy(Filiere $filiere)
     {
         $filiere->delete();
 
-        return redirect()->route('filieres.index')
-                         ->with('success', 'Filière supprimée.');
+        return redirect()->route('parametres.index')->with('success', 'Filière supprimée avec succès.');
     }
 }
