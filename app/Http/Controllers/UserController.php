@@ -7,19 +7,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash; // Pour le hachage du mot de passe
 use Illuminate\Validation\Rule;
 
-class UtilisateurController extends Controller
+class UserController extends Controller
 {
     // 🔹 Afficher tous les utilisateurs
     public function index()
     {
         $users = User::all();
-        return view('utilisateurs.index', compact('users'));
+        return view('users.index', compact('users'));
     }
 
     // 🔹 Formulaire de création
     public function create()
     {
-        return view('utilisateurs.creer');
+        return view('users.creer');
     }
 
     // 🔹 Enregistrer un nouvel utilisateur
@@ -41,7 +41,7 @@ class UtilisateurController extends Controller
             'role' => $request->role,
         ]);
 
-        return redirect()->route('utilisateurs.index')
+        return redirect()->route('users.index')
                          ->with('success', 'Utilisateur créé avec succès.');
     }
 

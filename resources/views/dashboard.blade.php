@@ -88,7 +88,7 @@ body {
         <a href="{{ route('etudiants.index') }}">Etudiants</a>
         <a href="{{ route('cartes.index') }}">Cartes d'étudiants</a>
         <a href="{{ route('historique_cartes.index') }}">Historique des cartes</a>
-        <a href="{{ route('utilisateurs.index') }}">Administrateurs</a>
+        <a href="{{ route('users.index') }}">Administrateurs</a>
         <a href="{{ route('parametres.index') }}">Paramètres</a>
         <form action="#" method="POST">
             @csrf

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class ConnexionController extends Controller
 {
@@ -12,6 +13,14 @@ class ConnexionController extends Controller
      */
     public function login()
     {
+        // Vérifier s'il existe déjà un administrateur
+        $adminExiste = User::where('role', 'admin')->exists();
+
+        if (!$adminExiste) {
+            // Rediriger vers la création du premier admin
+            return redirect()->route('users.creer');
+        }
+
         return view('connexion.login');
     }
 
