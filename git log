@@ -1,0 +1,35 @@
+[33mcommit 7bdfb6db544d3d2ce8da8bd075102d322857130d[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: DAYAMBA Blaise <dyblaise012@gmail.com>
+Date:   Fri Jan 23 00:01:37 2026 +0000
+
+    Ajout de ConnexionController
+
+[33mcommit 8e2910dd53504ce0e664cd08c73704bd3d08c2b8[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Saratou Rufai <saratou664@gmail.com>
+Date:   Wed Jan 21 23:09:55 2026 +0000
+
+    Mise à jour : Utilisation du système de connexion standard de Laravel et suppression de l'ancien système Adminin
+
+[33mcommit e3ba0ae5585b68b523955e4cf72041b0d54db622[m
+Author: Saratou Rufai <saratou664@gmail.com>
+Date:   Wed Jan 21 01:09:49 2026 +0000
+
+    Ajout des nouveaux contrôleurs et routes API pour voir si les controller fonctionne
+
+[33mcommit 2bd8c436f43d738bb8a3cd74473df3abb1a273c0[m
+Author: Saratou Rufai <saratou664@gmail.com>
+Date:   Mon Jan 19 23:34:22 2026 +0000
+
+    Ajout des migrations pour administrateurs, historiques et parametres
+
+[33mcommit dc5f00ee8b4d96caaf7cb6cdee4c0d93d6aa2e4c[m
+Author: saratou-rufai <saratou664@gmail.com>
+Date:   Mon Jan 19 16:23:18 2026 +0000
+
+    Update README.md
+
+[33mcommit 84031003cbe1053f20d551595822b0fd5379d4d4[m
+Author: Saratou Rufai <saratou664@gmail.com>
+Date:   Mon Jan 19 15:00:14 2026 +0000
+
+    Premier envoi du projet Carte Numerique
