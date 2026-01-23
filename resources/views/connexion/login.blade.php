@@ -32,6 +32,18 @@
         margin-bottom: 15px;
         border-radius: 3px;
     }
+    .links {
+        text-align: center;
+        margin-top: 15px;
+    }
+    .links a {
+        display: block;
+        margin: 5px 0;
+        font-size: 13px;
+        color: #4CAF50;
+        text-decoration: none;
+    }
+    .links a:hover { text-decoration: underline; }
 </style>
 
 <div class="container">
@@ -61,5 +73,10 @@
 
         <button type="submit">Se connecter</button>
     </form>
+
+    <div class="links">
+        <a href="{{ route('users.creer') }}">Créer un compte</a>
+        <a href="#">Mot de passe oublié ?</a>
+    </div>
 </div>
 @endsection

@@ -41,7 +41,7 @@ class UserController extends Controller
             'role' => $request->role,
         ]);
 
-        return redirect()->route('users.index')
+        return redirect()->route('login')
                          ->with('success', 'Utilisateur créé avec succès.');
     }
 
