@@ -6,10 +6,16 @@
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
         min-height: 100vh;
-        display: flex;
         justify-content: center;
         align-items: center;
         padding: 20px;
+    }
+
+    .page_container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
     }
 
     .container {
@@ -108,7 +114,7 @@
         font-size: 14px;
     }
 </style>
-
+<div class="page_container">
 <div class="container">
     <h1>Créer un administrateur</h1>
 
@@ -159,7 +165,10 @@
         <input type="hidden" name="role" value="admin">
 
         <button type="submit" class="btn btn-primary">Créer</button>
-        <a href="{{ route('users.index') }}" class="btn btn-secondary">Annuler</a>
+        <a href="{{ route('login') }}" class="btn btn-secondary">Annuler</a>
     </form>
 </div>
+</div>
+
+
 @endsection

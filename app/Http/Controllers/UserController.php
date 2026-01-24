@@ -16,6 +16,8 @@ class UserController extends Controller
         return view('users.index', compact('users'));
     }
 
+    // 🔹 Afficher tous les utilisateurs
+
     // 🔹 Formulaire de création
     public function create()
     {
