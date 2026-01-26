@@ -10,12 +10,14 @@ class Etudiant extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ine',
         'nom',
         'prenom',
         'email',
         'filiere_id',
         'niveau_id',
-        'annee_academique_id',
+        'annee_id',
+        'photo',
     ];
 
     // Relations
@@ -34,8 +36,8 @@ class Etudiant extends Model
         return $this->belongsTo(AnneeAcademique::class);
     }
 
-    public function cartes()
+    public function carte()
     {
-        return $this->hasMany(Carte::class);
+        return $this->hasOne(Carte::class);
     }
 }

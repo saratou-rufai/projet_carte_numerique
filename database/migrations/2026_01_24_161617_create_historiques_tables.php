@@ -37,3 +37,4 @@ Schema::create('historiques', function (Blueprint $table) {
         Schema::dropIfExists('historiques');
     }
 };
+

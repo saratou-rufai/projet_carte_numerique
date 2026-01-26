@@ -9,13 +9,6 @@ body {
     margin: 0;
 }
 
-/* ENTÊTE */
-.header {
-    background-color: #ffffff;
-    padding: 20px;
-    text-align: center;
-    border-bottom: 2px solid #ddd;
-}
 
 .header h1 {
     margin: 0;
@@ -76,9 +69,6 @@ body {
 </style>
 
 <!-- ENTÊTE -->
-<div class="header">
-    <h1>Tableau de bord</h1>
-</div>
 
 <!-- CORPS -->
 <div class="body-container">
@@ -90,7 +80,7 @@ body {
         <a href="{{ route('historique_cartes.index') }}">Historique des cartes</a>
         <a href="{{ route('users.index') }}">Administrateurs</a>
         <a href="{{ route('parametres.index') }}">Paramètres</a>
-        <form action="#" method="POST">
+        <form action="{{ route('deconnexion') }}" method="POST">
             @csrf
             <button type="submit">Déconnexion</button>
         </form>

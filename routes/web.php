@@ -15,10 +15,25 @@ use App\Http\Controllers\ParametreController;
 |--------------------------------------------------------------------------
 | Routes Web
 |--------------------------------------------------------------------------
-|
+
 | Routes organisées pour l'administration et l'accès public
 |
 */
+
+    // ================= ÉTUDIANTS =================
+Route::prefix('etudiants')->name('etudiants.')->group(function () {
+    Route::get('/', [EtudiantController::class, 'index'])->name('index');
+
+    // PAGE FORMULAIRE → GET
+  Route::get('/creer', [EtudiantController::class, 'create'])->name('inscrire');
+
+    // ENREGISTREMENT → POST
+   Route::post('/enregistrer', [EtudiantController::class, 'store'])->name('enregistrer');
+
+    Route::get('/{etudiant}/modifier', [EtudiantController::class, 'edit'])->name('modifier');
+    Route::put('/{etudiant}', [EtudiantController::class, 'update'])->name('mettre_a_jour');
+    Route::delete('/{etudiant}', [EtudiantController::class, 'destroy'])->name('supprimer');
+});
 
 // Page d'accueil (publique)
 Route::get('/', function () {
@@ -86,15 +101,6 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    // ================= ÉTUDIANTS =================
-    Route::prefix('etudiants')->name('etudiants.')->group(function () {
-        Route::get('/', [EtudiantController::class, 'index'])->name('index');
-        Route::get('/creer', [EtudiantController::class, 'create'])->name('creer');
-        Route::post('/enregistrer', [EtudiantController::class, 'store'])->name('enregistrer');
-        Route::get('/{etudiant}/modifier', [EtudiantController::class, 'edit'])->name('modifier');
-        Route::put('/{etudiant}', [EtudiantController::class, 'update'])->name('mettre_a_jour');
-        Route::delete('/{etudiant}', [EtudiantController::class, 'destroy'])->name('supprimer');
-    });
 
     // ================= CARTES =================
     Route::prefix('cartes')->name('cartes.')->group(function () {
@@ -103,9 +109,10 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{carte}', [CarteController::class, 'update'])->name('mettre_a_jour');
     });
 
-    // ================= HISTORIQUE DES CARTES =================
+    // ================= CARTES & HISTORIQUE DES CARTES =================
     Route::get('/historique-cartes', [HistoriqueController::class, 'index'])->name('historique_cartes.index');
 });
 
 // ================= ROUTE PUBLIQUE =================
-Route::get('/carte-publique/{qr_code}', [CarteController::class, 'showPublic'])->name('cartes.publique');
+Route::get('/etudiants/carte/{token}', [EtudiantController::class, 'carte'])
+    ->name('etudiants.carte');
