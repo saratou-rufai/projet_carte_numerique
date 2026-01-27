@@ -80,13 +80,17 @@ table thead {
 }
 
 table thead th {
-    text-align: center;   /* entête centrée */
+    text-align: center;
 }
 
 table th,
 table td {
     padding: 12px 15px;
     border-bottom: 1px solid #ddd;
+}
+
+table tbody tr {
+    cursor: pointer;
 }
 
 table tbody tr:hover {
@@ -96,12 +100,12 @@ table tbody tr:hover {
 /* === Actions === */
 .actions {
     display: flex;
-    justify-content: center;  /* alignement horizontal */
-    align-items: center;      /* alignement vertical */
+    justify-content: center;
+    align-items: center;
     gap: 6px;
 }
 
-/* === Boutons (DESIGN D’ORIGINE) === */
+/* === Boutons === */
 .btn-action {
     padding: 6px 12px;
     border-radius: 6px;
@@ -130,7 +134,7 @@ table tbody tr:hover {
 
 .btn-carte {
     background-color: #FF9800;
-    padding: 6px 18px; /* plus large */
+    padding: 6px 18px;
 }
 .btn-carte:hover {
     background-color: #e68a00;
@@ -173,16 +177,21 @@ table tbody tr:hover {
 
         <div class="search">
             <form method="GET" action="{{ route('etudiants.index') }}">
-                <input type="text" name="q" placeholder="Rechercher..." value="{{ request('q') }}">
+                <input type="text"
+                       name="q"
+                       placeholder="Rechercher (INE, nom, prénom, carte)"
+                       value="{{ request('q') }}">
             </form>
         </div>
 
         <div>
-            <a href="{{ route('etudiants.inscrire') }}" class="btn-add">Ajouter un étudiant</a>
+            <a href="{{ route('etudiants.inscrire') }}" class="btn-add">
+                Ajouter un étudiant
+            </a>
         </div>
     </div>
 
-    {{-- Table des étudiants --}}
+    {{-- Table --}}
     <table>
         <thead>
             <tr>
@@ -190,28 +199,46 @@ table tbody tr:hover {
                 <th>Nom</th>
                 <th>Prénom</th>
                 <th>N° carte</th>
+                <th>Statut</th>
                 <th>Actions</th>
             </tr>
         </thead>
+
         <tbody>
-            @forelse($etudiants as $etudiant)
-            <tr>
+        @forelse($etudiants as $etudiant)
+            <tr onclick="window.location='{{ route('etudiants.afficher', $etudiant->id) }}'">
                 <td>{{ $etudiant->ine }}</td>
                 <td>{{ $etudiant->nom }}</td>
                 <td>{{ $etudiant->prenom }}</td>
-                <td>{{ $etudiant->numero_carte ?? '-' }}</td>
-                <td>
-                    <div class="actions">
+                <td>{{ $etudiant->carte->numero ?? '-' }}</td>
+
+                <td style="text-align:center;">
                     @if($etudiant->carte)
-                    <a href="{{ route('etudiants.carte', $etudiant->carte->token) }}"
-                    class="btn-action btn-carte">
-                    Voir carte
-                    </a>
+                        <span style="color:green; font-weight:600;">Active</span>
                     @else
-                    <span class="btn-action btn-carte" style="opacity:0.6; cursor:not-allowed;">
-                    Carte non disponible
-                    </span>
+                        <span style="color:red; font-weight:600;">Non délivrée</span>
                     @endif
+                </td>
+
+                <td onclick="event.stopPropagation();">
+                    <div class="actions">
+
+                        @if($etudiant->carte)
+                            <a href="{{ route('etudiants.carte', $etudiant->carte->token) }}"
+                               class="btn-action btn-carte">
+                                Voir carte
+                            </a>
+                        @else
+                            <span class="btn-action btn-carte"
+                                  style="opacity:0.6; cursor:not-allowed;">
+                                Carte non disponible
+                            </span>
+                        @endif
+
+                        <a href="{{ route('etudiants.modifier', $etudiant->id) }}"
+                           class="btn-action btn-edit">
+                            ✏️
+                        </a>
 
                         <form action="{{ route('etudiants.supprimer', $etudiant->id) }}"
                               method="POST" style="margin:0;">
@@ -226,11 +253,13 @@ table tbody tr:hover {
                     </div>
                 </td>
             </tr>
-            @empty
+        @empty
             <tr>
-                <td colspan="5" style="text-align:center;">Aucun étudiant trouvé.</td>
+                <td colspan="6" style="text-align:center;">
+                    Aucun étudiant trouvé.
+                </td>
             </tr>
-            @endforelse
+        @endforelse
         </tbody>
     </table>
 

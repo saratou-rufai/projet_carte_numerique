@@ -31,6 +31,7 @@ Route::prefix('etudiants')->name('etudiants.')->group(function () {
    Route::post('/enregistrer', [EtudiantController::class, 'store'])->name('enregistrer');
 
     Route::get('/{etudiant}/modifier', [EtudiantController::class, 'edit'])->name('modifier');
+    Route::get('/{etudiant}/afficher', [EtudiantController::class, 'afficher'])->name('afficher');
     Route::put('/{etudiant}', [EtudiantController::class, 'update'])->name('mettre_a_jour');
     Route::delete('/{etudiant}', [EtudiantController::class, 'destroy'])->name('supprimer');
 });

@@ -18,6 +18,13 @@ class EtudiantController extends Controller
         return view('etudiants.index', compact('etudiants'));
     }
 
+
+    // AFFICHER LES INFORMATIONS D'UN ETUDIANT
+public function afficher(Etudiant $etudiant){
+    $etudiant->load(['filiere', 'niveau', 'carte']);
+    return view('etudiants.afficher', compact('etudiant'));
+}
+
     /**
  * Affiche le formulaire pour créer un nouvel étudiantA
  */
@@ -90,7 +97,7 @@ $carte = Carte::create([
     }
 
     // Met à jour un étudiant
-    public function update(Request $request, Etudiant $etudiant)
+    public function edit(Request $request, Etudiant $etudiant)
     {
         $validated = $request->validate([
             'INE' => 'required|unique:etudiants,INE,' . $etudiant->id,
