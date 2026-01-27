@@ -176,12 +176,14 @@ table tbody tr:hover {
         </div>
 
         <div class="search">
-            <form method="GET" action="{{ route('etudiants.index') }}">
-                <input type="text"
-                       name="q"
-                       placeholder="Rechercher (INE, nom, prénom, carte)"
-                       value="{{ request('q') }}">
-            </form>
+        <form method="GET" action="{{ route('etudiants.index') }}">
+            <input type="text"
+           id="search-input"
+           name="q"
+           placeholder="Rechercher (INE, nom, prénom, carte)"
+           value="{{ request('q') }}">
+        </form>
+
         </div>
 
         <div>
@@ -213,10 +215,12 @@ table tbody tr:hover {
                 <td>{{ $etudiant->carte->numero ?? '-' }}</td>
 
                 <td style="text-align:center;">
-                    @if($etudiant->carte)
-                        <span style="color:green; font-weight:600;">Active</span>
+                    @if($etudiant->carte->statut === 'active')
+                        <span style="color:green; font-weight:500; font-size: 15px">Active</span>
+                    @elseif($etudiant->carte->statut === 'suspendue')
+                        <span style="color:orange; font-weight:500; font-size: 15px">Suspendue</span>
                     @else
-                        <span style="color:red; font-weight:600;">Non délivrée</span>
+                        <span style="color:red; font-weight:500; font-size: 15px;">Expirée</span>
                     @endif
                 </td>
 
@@ -224,7 +228,7 @@ table tbody tr:hover {
                     <div class="actions">
 
                         @if($etudiant->carte)
-                            <a href="{{ route('etudiants.carte', $etudiant->carte->token) }}"
+                            <a href="{{ route('etudiants.carte', $etudiant->carte->id) }}"
                                class="btn-action btn-carte">
                                 Voir carte
                             </a>
@@ -264,4 +268,21 @@ table tbody tr:hover {
     </table>
 
 </div>
+
+<script>
+    const input = document.getElementById('search-input');
+    let timer;
+
+    if (input) {
+        input.focus(); // remet le curseur automatiquement
+
+        input.addEventListener('input', function () {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                this.form.submit();
+            }, 500);
+        });
+    }
+</script>
+
 @endsection

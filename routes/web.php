@@ -113,11 +113,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{carte}/modifier', [CarteController::class, 'edit'])->name('modifier');
         Route::put('/{carte}', [CarteController::class, 'update'])->name('mettre_a_jour');
     });
+    Route::post('/cartes/{carte}/statut', [CarteController::class, 'changerStatut'])
+     ->name('cartes.statut');
+     
+
 
     // ================= CARTES & HISTORIQUE DES CARTES =================
     Route::get('/historique-cartes', [HistoriqueController::class, 'index'])->name('historique_cartes.index');
 });
 
 // ================= ROUTE PUBLIQUE =================
-Route::get('/etudiants/carte/{token}', [EtudiantController::class, 'carte'])
+Route::get('/etudiants/carte/{id}', [EtudiantController::class, 'carte'])
     ->name('etudiants.carte');

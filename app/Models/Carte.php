@@ -12,12 +12,16 @@ class Carte extends Model
     protected $fillable = [
         'numero',
         'etudiant_id',
-        'token',
         'date_creation',
         'date_expiration',
         'statut',
         'qr_code',
     ];
+
+    protected $attributes = [
+    'statut' => 'ACTIVE',
+];
+
 
     public function etudiant()
     {

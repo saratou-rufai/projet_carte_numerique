@@ -31,12 +31,13 @@
             <p><span>Prénom</span> <b>{{ $etudiant->prenom }}</b></p>
             <p><span>Filière</span> <b>{{ $etudiant->filiere->libelle }}</b></p>
             <p><span>Niveau</span> <b>{{ $etudiant->niveau->libelle }}</b></p>
-            <p><span>Année académique</span> <b>{{ $etudiant->annee_academique?->libelle ?? '-' }}</b></p>
+            <p><span>Année académique</span> <b>{{ $etudiant->annee_cademique?->libelle ?? '-' }}</b></p>
         </div>
     </div>
 
     <div class="actions">
         <a href="{{ route('etudiants.modifier', $etudiant->id) }}" class="btn btn-primary">✏️ Modifier</a>
+        <a href="{{ route('etudiants.carte', $etudiant->carte->token) }}"class="btn-action btn-carte"> Voir carte</a>
         <a href="{{ route('etudiants.index') }}" class="btn btn-secondary">⬅️ Retour</a>
     </div>
 </div>

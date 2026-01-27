@@ -16,4 +16,9 @@ class AnneeAcademique extends Model
         'libelle',
         // autres colonnes si besoin
     ];
+
+        public function etudiants()
+    {
+        return $this->hasMany(Etudiant::class);
+    }
 }

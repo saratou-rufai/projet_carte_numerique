@@ -12,10 +12,24 @@ use Carbon\Carbon;
 class EtudiantController extends Controller
 { 
     // Affiche la liste des étudiants
-    public function index()
+    public function index(Request $request)
     {
-        $etudiants = Etudiant::with(['filiere', 'niveau', 'carte'])->get();
-        return view('etudiants.index', compact('etudiants'));
+            $q = $request->input('q'); // null si pas de recherche
+
+    $etudiants = Etudiant::with(['filiere', 'niveau', 'carte'])
+        ->when($q, function ($query, $q) {
+            $query->where(function ($subQuery) use ($q) {
+                $subQuery->where('ine', 'like', "%{$q}%")
+                          ->orWhere('nom', 'like', "%{$q}%")
+                          ->orWhere('prenom', 'like', "%{$q}%")
+                          ->orWhereHas('carte', function ($c) use ($q) {
+                              $c->where('numero', 'like', "%{$q}%");
+                          });
+            });
+        })
+        ->get();
+
+    return view('etudiants.index', compact('etudiants'));
     }
 
 
@@ -141,10 +155,10 @@ $carte = Carte::create([
 
     // Affiche la carte d'un étudiant
 
-public function carte($token)
+public function carte($id)
 {
     // On récupère la carte via le token
-    $carte = Carte::where('token', $token)->with('etudiant')->firstOrFail();
+    $carte = Carte::where('id', $id)->with('etudiant')->firstOrFail();
 
     // On renvoie la vue avec la carte
     return view('etudiants.carte', compact('carte'));

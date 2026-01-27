@@ -3,10 +3,10 @@
 @section('contenu')
 
 <style>
-    /* === FORMAT CARTE RÉEL : 85mm x 55mm === */
+    /* === FORMAT CARTE RÉEL : 85mm x 54mm === */
     .carte-container {
         width: 85mm;
-        height: 50mm;
+        height: 54mm;
         margin: 30px auto;
         padding: 5mm;
         background: linear-gradient(135deg, #674d00, #467e35);
@@ -20,7 +20,6 @@
         overflow: hidden;
     }
 
-    /* décor léger */
     .carte-container::before {
         content: "";
         position: absolute;
@@ -32,7 +31,6 @@
         right: -25mm;
     }
 
-    /* ===== ENTÊTE ===== */
     .carte-header {
         text-align: center;
         font-size: 4.5mm;
@@ -49,7 +47,6 @@
         margin-bottom: 4mm;
     }
 
-    /* ===== CORPS ===== */
     .carte-body {
         flex: 1;
         display: flex;
@@ -78,7 +75,6 @@
         opacity: 0.85;
     }
 
-    /* ===== STATUT ===== */
     .statut {
         padding: 2mm;
         border-radius: 3mm;
@@ -88,11 +84,10 @@
         color: #fff;
     }
 
-    .statut.active { background: #28a745; }
-    .statut.suspendue { background: #ff9800; }
-    .statut.expiree { background: #dc3545; }
+    .statut.active { background: #00c12d83; }
+    .statut.suspendue { background: #ff9900a4; }
+    .statut.expiree { background: #ff001973; }
 
-    /* ===== QR ===== */
     .carte-right {
         width: 45%;
         display: flex;
@@ -111,12 +106,57 @@
         justify-content: center;
     }
 
-    /* ===== PIED ===== */
-    .carte-footer {
-        margin-top: 2mm;
-        font-size: 2.5mm;
-        text-align: center;
-        opacity: 0.85;
+    /* ===== ZONE EN BAS (RADIOS + BOUTON) ===== */
+    .actions-zone {
+        width: 85mm;
+        margin: 12px auto 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* === STATUT CARTE === */
+.carte-statut {
+    margin-top: 12px;
+}
+
+ .statut {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+    .status-group label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-print {
+        padding: 10px 20px;
+        font-size: 14px;
+        border-radius: 25px;
+        border: none;
+        cursor: pointer;
+        background: #2c3e50;
+        color: #fff;
+    }
+
+    .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #28a745;
+        color: #fff;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-weight: 700;
+        display: none;
     }
 </style>
 
@@ -136,21 +176,27 @@
             <div>
                 <div class="carte-info">
                     <strong>Date de création</strong>
-                    {{ \Carbon\Carbon::parse($carte->date_creation_carte)->format('d-m-Y') }}
+                    {{ \Carbon\Carbon::parse($carte->date_creation)->format('d-m-Y') }}
                 </div>
 
                 <div class="carte-info">
                     <strong>Date d'expiration</strong>
-                    {{ \Carbon\Carbon::parse($carte->date_expiration_carte)->format('d-m-Y') }}
+                    {{ \Carbon\Carbon::parse($carte->date_expiration)->format('d-m-Y') }}
                 </div>
             </div>
 
-            <div class="statut
-                {{ $carte->statut == 'ACTIVE' ? 'active' : '' }}
-                {{ $carte->statut == 'SUSPENDUE' ? 'suspendue' : '' }}
-                {{ $carte->statut == 'EXPIREE' ? 'expiree' : '' }}">
-                {{ $carte->statut }}
+            <div class="statut">
+                @if($carte->statut === 'active')
+                    <span class="statut active">🟢 ACTIVE</span>
+                @elseif($carte->statut === 'suspendue')
+                    <span class="statut suspendue">🟠 SUSPENDUE</span>
+                @elseif($carte->statut === 'expiree')
+                    <span class="statut expiree">🔴 EXPIREE</span>
+                    @else
+                    <span class="statut suspendue">Statut inconnu</span>
+                @endif
             </div>
+
         </div>
 
         <div class="carte-right">
@@ -161,10 +207,66 @@
 
     </div>
 
-    <div class="carte-footer">
-        Cette carte est la propriété privée de son détenteur
-    </div>
+</div>
+
+<!-- ===== RADIOS + BOUTON SOUS LA CARTE ===== -->
+<div class="actions-zone">
+<div class="status-group">
+    <label>
+        <input type="radio" name="statut" value="ACTIVE"
+               onclick="changerStatut('ACTIVE')"
+               {{ $carte->statut === 'ACTIVE' ? 'checked' : '' }}>
+        Active
+    </label>
+
+    <label>
+        <input type="radio" name="statut" value="SUSPENDUE"
+               onclick="changerStatut('SUSPENDUE')"
+               {{ $carte->statut === 'SUSPENDUE' ? 'checked' : '' }}>
+        Suspendue
+    </label>
+
+    <label>
+        <input type="radio" name="statut" value="EXPIREE"
+               onclick="changerStatut('EXPIREE')"
+               {{ $carte->statut === 'EXPIREE' ? 'checked' : '' }}>
+        Expirée
+    </label>
+</div>
+</div>
+
+
+
+<button class="btn-print" onclick="window.print()">🖨️ Imprimer la carte</button>
 
 </div>
+
+<div class="toast" id="toast">Statut mis à jour avec succès ✔</div>
+
+<script>
+function showToast() {
+    const toast = document.getElementById('toast');
+    toast.style.display = 'block';
+    setTimeout(() => toast.style.display = 'none', 2500);
+}
+
+function changerStatut(statut) {
+    if (!confirm('Confirmer le changement de statut ?')) return;
+
+    fetch("{{ route('cartes.statut', $carte->id) }}", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ statut })
+    })
+    .then(res => res.json())
+    .then(data => {
+        showToast();
+        setTimeout(() => location.reload(), 1200);
+    });
+}
+</script>
 
 @endsection
