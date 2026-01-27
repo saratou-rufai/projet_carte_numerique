@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Etudiant;
+use App\Models\Carte;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EtudiantController;
@@ -66,9 +69,10 @@ Route::prefix('users')->name('users.')->group(function () {
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard
-    Route::get('/accueil', function () {
-        return view('dashboard');
-    })->name('dashboard');
+  Route::get('/accueil', function () {
+    $totalEtudiants = Etudiant::count(); // On récupère le nombre total
+    return view('dashboard', compact('totalEtudiants'));
+})->name('dashboard');
 
     // ================= PARAMÈTRES =================
     Route::prefix('parametres')->name('parametres.')->group(function () {
