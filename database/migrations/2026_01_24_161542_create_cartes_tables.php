@@ -14,9 +14,6 @@ return new class extends Migration
         Schema::create('cartes', function (Blueprint $table) {
             $table->id();
 
-            // 🔐 TOKEN PUBLIC POUR QR CODE
-            $table->string('token')->unique();
-
             // ✅ NUMÉRO DE CARTE
             $table->string('numero')->unique();
 

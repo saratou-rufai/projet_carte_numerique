@@ -37,7 +37,7 @@
 
     <div class="actions">
         <a href="{{ route('etudiants.modifier', $etudiant->id) }}" class="btn btn-primary">✏️ Modifier</a>
-        <a href="{{ route('etudiants.carte', $etudiant->carte->token) }}"class="btn-action btn-carte"> Voir carte</a>
+        <a href="{{ route('etudiants.carte', $etudiant->carte->id) }}"class="btn-action btn-carte"> Voir carte</a>
         <a href="{{ route('etudiants.index') }}" class="btn btn-secondary">⬅️ Retour</a>
     </div>
 </div>

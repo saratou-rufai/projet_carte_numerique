@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Etudiant;
 use App\Models\Carte;
+use App\Models\AnneeAcademique;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -111,15 +112,29 @@ $carte = Carte::create([
     }
 
     // Met à jour un étudiant
-    public function edit(Request $request, Etudiant $etudiant)
+
+    public function edit($id)
+{
+    $etudiant = Etudiant::findOrFail($id);
+
+    // Récupérer les listes pour les selects
+    $filieres = $etudiant->Filiere::all();
+    $niveaux = $etudiant->Niveau::all();
+    $annees_academiques = AnneeAcademique::all();
+
+    return view('etudiants.modifier', compact('etudiant', 'filieres', 'niveaux', 'annees_academiques'));
+}
+
+
+    public function update(Request $request, Etudiant $etudiant)
     {
         $validated = $request->validate([
-            'INE' => 'required|unique:etudiants,INE,' . $etudiant->id,
-            'nom_complet' => 'required|string|max:255',
-            'filiere_id' => 'required|exists:filieres,id',
-            'niveau_id' => 'required|exists:niveaux,id',
-            'annee_academique' => 'required|string',
-            'photo' => 'nullable|image|max:2048'
+        'nom' => 'required|string|max:255',
+        'prenom' => 'required|string|max:255',
+        'filiere_id' => 'required|exists:filieres,id',
+        'niveau_id' => 'required|exists:niveaux,id',
+        'annee_id' => 'required|exists:annees_academiques,id',
+        'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         if ($request->hasFile('photo')) {
@@ -131,7 +146,7 @@ $carte = Carte::create([
 
         $etudiant->update($validated);
 
-        return redirect()->route('etudiants.index')
+        return redirect()->route('etudiants.index', $etudiant->id)
                          ->with('success', 'Informations mises à jour.');
     }
 
@@ -157,10 +172,16 @@ $carte = Carte::create([
 
 public function carte($id)
 {
-    // On récupère la carte via le token
+    // On récupère la carte via son id
     $carte = Carte::where('id', $id)->with('etudiant')->firstOrFail();
 
+    // URL PUBLIQUE
+    $monIP = gethostbyname(gethostname()); // IP locale du PC
+    $lien_public = "http://{$monIP}:8000/vue_public/{$carte->qr_code}";
+
+    // $lien_public = "http://127.0.0.1:8000/vue_public/".$carte->qr_code;
+
     // On renvoie la vue avec la carte
-    return view('etudiants.carte', compact('carte'));
+    return view('etudiants.carte', compact('carte', 'lien_public'));
 }
 }

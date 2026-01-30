@@ -33,7 +33,8 @@ Route::prefix('etudiants')->name('etudiants.')->group(function () {
     // ENREGISTREMENT → POST
    Route::post('/enregistrer', [EtudiantController::class, 'store'])->name('enregistrer');
 
-    Route::get('/{etudiant}/modifier', [EtudiantController::class, 'edit'])->name('modifier');
+    Route::get('/etudiants/{id}/modifier', [EtudiantController::class, 'edit'])->name('modifier');
+    
     Route::get('/{etudiant}/afficher', [EtudiantController::class, 'afficher'])->name('afficher');
     Route::put('/{etudiant}', [EtudiantController::class, 'update'])->name('mettre_a_jour');
     Route::delete('/{etudiant}', [EtudiantController::class, 'destroy'])->name('supprimer');
@@ -125,3 +126,19 @@ Route::middleware(['auth'])->group(function () {
 // ================= ROUTE PUBLIQUE =================
 Route::get('/etudiants/carte/{id}', [EtudiantController::class, 'carte'])
     ->name('etudiants.carte');
+
+
+Route::get('/cartes/{id}/pdf', [CarteController::class, 'pdf'])->name('cartes.pdf');
+
+
+// 1️⃣ Page publique du QR code
+Route::get('/vue_public/{qr_code}', [CarteController::class, 'vue_public'])
+    ->name('vue_publique');
+
+// 2️⃣ Vue Blade spéciale pour BrowserShot (HTML de la carte seule)
+Route::get('/cartes/{carte}/pdf-view', [CarteController::class, 'pdfView'])
+    ->name('cartes.pdf.view');
+
+// 3️⃣ Génération PDF via BrowserShot
+Route::get('/cartes/{carte}/pdf', [CarteController::class, 'pdf'])
+    ->name('cartes.pdf.generate');
