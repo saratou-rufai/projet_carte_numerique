@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #caeeff;
+            background: #dbf1ff;
             margin: 35px;
             padding: 30px;
         }
@@ -17,7 +17,7 @@
         .container { max-width: 1000px; margin: auto; }
 
         .bloc {
-            background: #dbf5ff;
+            background: #e7f9ff;
             padding: 20px;
             margin-bottom: 55px;
             border-radius: 6px;

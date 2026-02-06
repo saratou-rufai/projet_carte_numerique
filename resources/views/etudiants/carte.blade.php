@@ -16,7 +16,7 @@
     width: 100mm;
     height: 63mm;
     padding: 5mm;
-    background: linear-gradient(135deg, #674d00, #467e35);
+    /* background: linear-gradient(135deg, #674d00, #467e35); */
     border-radius: 5mm;
     box-shadow: 0 12px 30px rgba(0,0,0,0.5);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -25,6 +25,10 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+
+    background-image: url("{{ asset('images/carte-back.jpg') }}");
+    background-size: cover;
+    background-position: center;
 }
 
 .carte-container::before {
@@ -63,7 +67,7 @@
 .carte-left {
     width: 50%;
     text-align: center;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(107, 63, 22, 0.33);
     border-radius: 4mm;
     padding: 5mm;
     display: flex;
@@ -153,28 +157,39 @@
 
 /* ================= PRINT PDF ================= */
 @media print {
+
     body * {
-        visibility: hidden; /* tout cacher */
+        visibility: hidden; /* Tout cacher */
     }
 
     .carte-container, .carte-container * {
-        visibility: visible; /* afficher uniquement la carte */
+        visibility: visible; /* Afficher uniquement la carte */
+    }
+
+    .header, .footer {
+        display: none;
     }
 
     .carte-container {
         position: absolute;
-        left: 0;
-        top: 0;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Centre sur la page */
         margin: 0;
-        width: 100mm;       /* largeur exacte de la carte */
-        height: 63mm;       /* hauteur exacte de la carte */
-        display: flex;       /* force flex pour garder le layout */
-        flex-direction: column;
+        width: 100mm;       /* Largeur exacte */
+        height: 63mm;       /* Hauteur exacte */
         padding: 5mm;
-        box-shadow: none;    /* optionnel pour PDF propre */
-        background: linear-gradient(135deg, #674d00, #467e35); /* force le fond */
-        color: #fff;        /* texte visible */
+        display: flex;
+        flex-direction: column;
+        box-shadow: none;
+        background-image: url("{{ asset('images/carte-back.jpg') }}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        color: #fff;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        -webkit-print-color-adjust: exact; /* Fond visible dans le PDF */
+        print-color-adjust: exact;
     }
 
     .carte-container::before {
@@ -186,6 +201,11 @@
         border-radius: 37%;
         top: -30mm;
         right: -25mm;
+    }
+
+    /* Supprimer tout sauf la carte */
+    .actions-zone, .page-carte > *:not(.carte-container) {
+        display: none !important;
     }
 }
 
@@ -209,12 +229,12 @@
             <div class="carte-left">
                 <div>
                     <div class="carte-info">
-                        <strong>Date de création</strong>
+                        Date de création <br>
                         {{ \Carbon\Carbon::parse($carte->date_creation)->format('d-m-Y') }}
                     </div>
 
                     <div class="carte-info">
-                        <strong>Date d'expiration</strong>
+                        Date d'expiration <br>
                         {{ \Carbon\Carbon::parse($carte->date_expiration)->format('d-m-Y') }}
                     </div>
                 </div>
@@ -246,25 +266,30 @@
         @csrf
 
         <!-- Radios en haut -->
-        <div class="status-group">
-            <label>
-                <input type="radio" name="statut" value="active"
-                       {{ $carte->statut === 'active' ? 'checked' : '' }}>
-                <b> Activer </b>
-            </label>
+<form method="POST" action="{{ route('cartes.statut', $carte->id) }}">
+    @csrf
 
-            <label>
-                <input type="radio" name="statut" value="suspendue"
-                       {{ $carte->statut === 'suspendue' ? 'checked' : '' }}>
-                <b> Suspendre </b>
-            </label>
+    <div class="status-group">
+        <label>
+            <input type="radio" name="statut" value="active"
+                   {{ $carte->statut === 'active' ? 'checked' : '' }}>
+            <b> Activer </b>
+        </label>
 
-            <label>
-                <input type="radio" name="statut" value="expiree"
-                       {{ $carte->statut === 'expiree' ? 'checked' : '' }}>
-                <b> Expirer </b>
-            </label>
-        </div>
+        <label>
+            <input type="radio" name="statut" value="suspendue"
+                   {{ $carte->statut === 'suspendue' ? 'checked' : '' }}>
+            <b> Suspendre </b>
+        </label>
+
+        <label>
+            <input type="radio" name="statut" value="expiree"
+                   {{ $carte->statut === 'expiree' ? 'checked' : '' }}>
+            <b> Expirer </b>
+        </label>
+    </div>
+
+</form>
 
     </form>
 
@@ -272,18 +297,55 @@
         <div class="boutons">
             <!-- <button type="submit" class="btn-print">💾 Valider statut </button> -->
             <button type="button" class="btn-print" onclick="window.print()">🖨️ Imprimer la carte </button>
-            
-            <!-- <a href="{{ route('cartes.pdf.view', $carte) }}" class="btn-print">📄 Télécharger PDF</a> -->
-
-
             <form action="{{ route('vue_publique', $carte->qr_code) }}" method="GET" style="display:inline;">
             <button type="submit" class="btn-print">👁️ Afficher l'étudiant</button>
             </form>
-
         </div>
 
 </div>
 
 </div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const form = document.querySelector('form');
+    let statutInitial = document.querySelector('input[name="statut"]:checked')?.value;
+
+    document.querySelectorAll('input[name="statut"]').forEach(radio => {
+
+        radio.addEventListener('click', function (e) {
+
+            // Si on clique sur le statut déjà actif → rien
+            if (this.value === statutInitial) {
+                return;
+            }
+
+            // Empêche le changement immédiat
+            e.preventDefault();
+
+            const confirmation = confirm(
+                "Confirmer le changement de statut vers : " + this.value.toUpperCase() + " ?"
+            );
+
+            if (confirmation) {
+                this.checked = true;
+                statutInitial = this.value;
+
+                // soumission automatique
+                form.submit();
+            } else {
+                // restauration de l'ancien état
+                document.querySelectorAll('input[name="statut"]').forEach(r => {
+                    r.checked = (r.value === statutInitial);
+                });
+            }
+        });
+
+    });
+
+});
+</script>
 
 @endsection

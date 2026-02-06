@@ -179,7 +179,6 @@ public function carte($id)
     $monIP = gethostbyname(gethostname()); // IP locale du PC
     $lien_public = "http://{$monIP}:8000/vue_public/{$carte->qr_code}";
 
-    // $lien_public = "http://127.0.0.1:8000/vue_public/".$carte->qr_code;
 
     // On renvoie la vue avec la carte
     return view('etudiants.carte', compact('carte', 'lien_public'));

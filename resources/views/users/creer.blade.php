@@ -1,173 +1,194 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer un administrateur</title>
 
-@section('contenu')
-<style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-        min-height: 100vh;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    .page_container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 19px;
+            background: linear-gradient(135deg, #a99f35, #63b4ff);
+        }
 
-    .container {
-        max-width: 500px;
-        background-color: #fff;
-        padding: 30px 40px;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
+        .page_container {
+            margin-top: 5px;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    h1 {
-        text-align: center;
-        margin-bottom: 25px;
-        color: #333;
-        font-weight: 600;
-    }
+        .container {
+            width: 800px; /* DESKTOP FIXE */
+            background: #ffffffbb;
+            padding: 45px 60px;
+            border-radius: 16px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+        }
 
-    .form-table {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2f3e46;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
 
-    .form-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+        .alert {
+            background-color: #fdecea;
+            color: #8a1f11;
+            border-left: 6px solid #e53935;
+            border-radius: 10px;
+            padding: 18px 22px;
+            margin-bottom: 35px;
+            font-size: 16px;
+        }
 
-    .form-row label {
-        flex: 1;
-        font-weight: 500;
-        color: #555;
-        margin-right: 10px;
-    }
+        .alert ul {
+            margin: 5px 0 0 10px;
+        }
 
-    .form-row input {
-        flex: 2;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        padding: 10px;
-        transition: 0.3s;
-    }
+        .form-table {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
 
-    .form-row input:focus {
-        border-color: #4CAF50;
-        box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
-        outline: none;
-    }
+        .form-row {
+            display: flex;
+            align-items: center;
+        }
 
-    .btn-primary {
-        width: 100%;
-        background-color: #4CAF50;
-        border: none;
-        padding: 12px;
-        font-size: 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        margin-top: 20px;
-        transition: 0.3s;
-    }
+        .form-row label {
+            width: 300px; /* ALIGNEMENT DESKTOP */
+            font-weight: 500;
+            color: #444;
+        }
 
-    .btn-primary:hover {
-        background-color: #45a049;
-    }
+        .form-row input {
+            width: 100%;
+            padding: 10px 15px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            transition: all 0.25s ease;
+        }
 
-    .btn-secondary {
-        width: 100%;
-        margin-top: 10px;
-        background-color: #aaa;
-        border: none;
-        padding: 12px;
-        font-size: 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: 0.3s;
-        text-align: center;
-        color: #fff;
-        text-decoration: none;
-        display: inline-block;
-    }
+        .form-row input:focus {
+            outline: none;
+            border-color: #5b9cda;
+            box-shadow: 0 0 0 3px rgba(39, 99, 126, 0.25);
+        }
 
-    .btn-secondary:hover {
-        background-color: #888;
-        text-decoration: none;
-        color: #fff;
-    }
+        .actions {
+            margin-top: 45px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
 
-    .alert {
-        background-color: #ffe6e6;
-        color: #900;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 20px;
-        font-size: 14px;
-    }
-</style>
+        .btn-primary {
+            width: 50%;
+            background: #296fd2;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(76, 175, 80, 0.35);
+        }
+
+        .btn-secondary {
+            width: 50%;
+            background: #9e9e9e;
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 12px;
+            text-align: center;
+            color: #fff;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #7e7e7e;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
 <div class="page_container">
-<div class="container">
-    <h1>Créer un administrateur</h1>
+    <div class="container">
+        <h1>Créer un compte administrateur</h1>
 
-    {{-- Affichage des messages d'erreur --}}
-    @if ($errors->any())
-        <div class="alert">
-            <strong>Attention !</strong> Veuillez corriger les erreurs ci-dessous :
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        {{-- Messages d'erreurs --}}
+        @if ($errors->any())
+            <div class="alert">
+                <strong>Attention :</strong> veuillez corriger les erreurs suivantes :
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-    {{-- Formulaire de création --}}
-    <form action="{{ route('users.enregistrer') }}" method="POST">
-        @csrf
+        <form action="{{ route('users.enregistrer') }}" method="POST">
+            @csrf
 
-        <div class="form-table">
-            <div class="form-row">
-                <label for="nom">Nom</label>
-                <input type="text" name="nom" id="nom" value="" required autocomplete="off">
+            <div class="form-table">
+                <div class="form-row">
+                    <label for="nom">Nom : </label>
+                    <input type="text" name="nom" id="nom" required autocomplete="off">
+                </div>
+
+                <div class="form-row">
+                    <label for="prenom">Prénom : </label>
+                    <input type="text" name="prenom" id="prenom" required autocomplete="off">
+                </div>
+
+                <div class="form-row">
+                    <label for="email">Email : </label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="password">Mot de passe : </label>
+                    <input type="password" name="password" id="password" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="password_confirmation">Confirmation : </label>
+                    <input type="password" name="password_confirmation" id="password_confirmation" required>
+                </div>
             </div>
 
-            <div class="form-row">
-                <label for="prenom">Prénom</label>
-                <input type="text" name="prenom" id="prenom" value="" required autocomplete="off">
+            <input type="hidden" name="role" value="admin">
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">Créer</button>
+                <a href="{{ route('login') }}" class="btn-secondary">Annuler</a>
             </div>
-
-            <div class="form-row">
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" value="" required>
-            </div>
-
-            <div class="form-row">
-                <label for="password">Mot de passe</label>
-                <input type="password" name="password" id="password" required>
-            </div>
-
-            <div class="form-row">
-                <label for="password_confirmation">Confirmer le mot de passe</label>
-                <input type="password" name="password_confirmation" id="password_confirmation" required>
-            </div>
-        </div>
-
-        {{-- Champ caché pour le rôle admin --}}
-        <input type="hidden" name="role" value="admin">
-
-        <button type="submit" class="btn btn-primary">Créer</button>
-        <a href="{{ route('login') }}" class="btn btn-secondary">Annuler</a>
-    </form>
+        </form>
+    </div>
 </div>
-</div>
 
-@endsection
+</body>
+</html>

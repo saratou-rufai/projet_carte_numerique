@@ -51,12 +51,12 @@
 }
 
 .list-footer input[type="text"]:focus {
-    border-color: #4CAF50;
+    border-color: #489ae6;
 }
 
 .list-footer .btn-add {
     padding: 10px 20px;
-    background-color: #4CAF50;
+    background-color: #489ae6;
     color: white;
     border-radius: 6px;
     text-decoration: none;
@@ -64,7 +64,7 @@
 }
 
 .list-footer .btn-add:hover {
-    background-color: #45a049;
+    background-color: #267ac9;
 }
 
 /* === Table === */
@@ -75,7 +75,7 @@ table {
 }
 
 table thead {
-    background-color: #4CAF50;
+    background-color: #489ae6;
     color: white;
 }
 
@@ -86,7 +86,7 @@ table thead th {
 table th,
 table td {
     padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #cecece;
 }
 
 table tbody tr {
@@ -119,7 +119,7 @@ table tbody tr:hover {
 }
 
 .btn-edit {
-    background-color: #2196F3;
+    background-color: #0c92ff;
 }
 .btn-edit:hover {
     background-color: #0b7dda;
@@ -129,15 +129,17 @@ table tbody tr:hover {
     background-color: #f44336;
 }
 .btn-delete:hover {
-    background-color: #da190b;
+    background-color: #c80d00;
 }
 
 .btn-carte {
-    background-color: #FF9800;
+    background-color: #e48900;
+    font-weight: bold;
     padding: 6px 18px;
 }
 .btn-carte:hover {
-    background-color: #e68a00;
+    font-weight: bold;
+    background-color: #b46c00;
 }
 
 /* === Messages flash === */
