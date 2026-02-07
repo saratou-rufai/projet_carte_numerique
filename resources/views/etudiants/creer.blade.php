@@ -189,7 +189,7 @@
             </div>
 
             <div class="form-group">
-                <label for="validite_carte">Durée de validité (mois)</label>
+                <label for="validite_carte">Durée de validité (années)</label>
                 <input type="number" name="validite_carte" id="validite_carte" min="1" required>
             </div>
 

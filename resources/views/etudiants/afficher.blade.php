@@ -5,12 +5,15 @@
 @section('contenu')
 
 <div class="etudiant-wrapper">
-    <h2 class="page-title">🎓 Détails de l’étudiant</h2>
-
     <div class="etudiant-card">
+        <!-- TITRE DANS LE RECTANGLE -->
+        <h2 class="page-title">🎓 Détails de l’étudiant</h2>
+
+        <!-- SECTION PHOTO ET STATUT -->
         <div class="photo-section">
+            {{-- PHOTO DE L'ÉTUDIANT --}}
             @if($etudiant->photo)
-                <img src="{{ asset('storage/' . $etudiant->photo) }}" alt="Photo étudiant">
+                <img src="{{ Storage::url($etudiant->photo) }}" alt="Photo étudiant" class="photo">
             @else
                 <div class="no-photo">Aucune photo</div>
             @endif
@@ -18,27 +21,41 @@
             {{-- STATUT DE LA CARTE --}}
             <div class="carte-statut">
                 @if($etudiant->carte)
-                    <span class="statut actif">🟢 Carte active</span>
+                    @php
+                        $statutCarte = $etudiant->carte->statut;
+                        $statutClass = match($statutCarte) {
+                            'active' => 'actif',
+                            'suspendue' => 'suspendue',
+                            'expiree' => 'expiree',
+                            default => 'inactive',
+                        };
+                    @endphp
+                    <span class="statut {{ $statutClass }}">
+                        {{ strtoupper($statutCarte) }}
+                    </span>
                 @else
                     <span class="statut inactive">🔴 Carte non disponible</span>
                 @endif
             </div>
         </div>
 
+        <!-- SECTION INFOS -->
         <div class="infos-section">
-            <p><span>INE</span> <b>{{ $etudiant->ine }}</b></p>
-            <p><span>Nom</span> <b>{{ $etudiant->nom }}</b></p>
-            <p><span>Prénom</span> <b>{{ $etudiant->prenom }}</b></p>
-            <p><span>Filière</span> <b>{{ $etudiant->filiere->libelle }}</b></p>
-            <p><span>Niveau</span> <b>{{ $etudiant->niveau->libelle }}</b></p>
-            <p><span>Année académique</span> <b>{{ $etudiant->annee_cademique?->libelle ?? '-' }}</b></p>
+            <p><span>INE</span> <b>{{ $etudiant->ine ?? '-' }}</b></p>
+            <p><span>Nom</span> <b>{{ $etudiant->nom ?? '-' }}</b></p>
+            <p><span>Prénom</span> <b>{{ $etudiant->prenom ?? '-' }}</b></p>
+            <p><span>Filière</span> <b>{{ $etudiant->filiere->libelle ?? '-' }}</b></p>
+            <p><span>Niveau</span> <b>{{ $etudiant->niveau->libelle ?? '-' }}</b></p>
+            <p><span>Année académique</span> <b>{{ $etudiant->anneeAcademique->libelle ?? '-' }}</b></p>
         </div>
     </div>
 
+    <!-- BOUTONS -->
     <div class="actions">
         <a href="{{ route('etudiants.modifier', $etudiant->id) }}" class="btn btn-primary">✏️ Modifier</a>
-        <a href="{{ route('etudiants.carte', $etudiant->carte->id) }}"class="btn-action btn-carte"> Voir carte</a>
-        <a href="{{ route('etudiants.index') }}" class="btn btn-secondary">⬅️ Retour</a>
+        @if($etudiant->carte)
+            <a href="{{ route('etudiants.carte', $etudiant->carte->id) }}" class="btn btn-success">🖨️ Voir la carte</a>
+        @endif
     </div>
 </div>
 
@@ -51,21 +68,27 @@
     font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 
-/* === TITRE === */
-.page-title {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #2c3e50;
-}
-
 /* === CARTE PRINCIPALE === */
 .etudiant-card {
     display: flex;
     gap: 30px;
+    flex-direction: row;
     background: #ffffff;
     border-radius: 15px;
-    padding: 25px;
+    padding: 60px 25px 25px 25px; /* 🔹 padding-top augmenté pour laisser plus d’espace au titre */
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    position: relative;
+}
+
+/* TITRE DANS LE RECTANGLE */
+.page-title {
+    position: absolute;
+    top: 5px; /* 🔹 titre un peu plus en haut pour ne pas chevaucher */
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    font-weight: bold;
+    color: #2c3e50;
 }
 
 /* === PHOTO === */
@@ -75,7 +98,7 @@
 }
 
 .photo-section img {
-    width: 150px;          /* ↓ taille réduite */
+    width: 150px;
     height: 175px;
     object-fit: cover;
     border-radius: 10px;
@@ -103,23 +126,20 @@
     display: inline-block;
     padding: 6px 14px;
     border-radius: 20px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
 }
 
-.statut.actif {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.statut.inactive {
-    background-color: #f8d7da;
-    color: #721c24;
-}
+/* Couleurs statut dynamiques */
+.statut.actif { background-color: #d4edda; color: #155724; }
+.statut.suspendue { background-color: #fff3cd; color: #856404; }
+.statut.expiree { background-color: #f8d7da; color: #721c24; }
+.statut.inactive { background-color: #f8d7da; color: #721c24; }
 
 /* === INFOS === */
 .infos-section {
     flex: 2;
+    padding-left: 20px;
 }
 
 .infos-section p {
@@ -138,7 +158,7 @@
 
 /* === BOUTONS === */
 .actions {
-    margin-top: 30px;
+    margin-top: 25px;
     text-align: center;
 }
 
@@ -147,7 +167,16 @@
     padding: 10px 25px;
     font-size: 15px;
     border-radius: 25px;
+    text-decoration: none;
+    color: #fff;
+    transition: 0.3s;
 }
+
+.btn-primary { background-color: #3498db; }
+.btn-primary:hover { background-color: #217dbb; }
+
+.btn-success { background-color: #2ecc71; }
+.btn-success:hover { background-color: #27ae60; }
 </style>
 
 @endsection

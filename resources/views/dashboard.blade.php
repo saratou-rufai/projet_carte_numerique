@@ -7,9 +7,10 @@
 .body-container {
     width: 100%;
     height: 100%;
-    background-color: #ffecc388;
+    background: linear-gradient(135deg, #63b4ff62, #a99f3561);
     padding: 20px;
     box-sizing: border-box;
+    border-radius:  23px;
 }
 
 /* ===== CONTENU DASHBOARD ===== */

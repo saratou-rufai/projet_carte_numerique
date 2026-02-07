@@ -31,10 +31,10 @@ class Etudiant extends Model
         return $this->belongsTo(Niveau::class);
     }
 
-    public function anneeAcademique()
-    {
-        return $this->belongsTo(AnneeAcademique::class);
-    }
+public function anneeAcademique()
+{
+    return $this->belongsTo(AnneeAcademique::class, 'annee_id');
+}
 
     public function carte()
     {

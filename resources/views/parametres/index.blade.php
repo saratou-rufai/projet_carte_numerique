@@ -13,7 +13,7 @@
 h1 { text-align: center; margin-bottom: 30px; }
 
 .bloc {
-    background: #e7f9ff;
+    background: #dcedff;
     padding: 20px;
     margin-bottom: 55px;
     border-radius: 6px;

@@ -125,3 +125,9 @@ Route::middleware(['auth'])->group(function () {
 // ================= ROUTE PUBLIQUE =================
 Route::get('/carte-publique/{qr_code}', [CarteController::class, 'showPublic'])
     ->name('cartes.publique');
+
+    // Liste des cartes
+Route::get('/cartes', [CarteController::class, 'index'])->name('cartes.index');
+
+// Page publique d'une carte
+Route::get('/cartes/public/{uuid}', [CarteController::class, 'vue_public'])->name('cartes.public');

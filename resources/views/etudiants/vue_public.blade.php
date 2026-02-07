@@ -18,9 +18,9 @@
     /* CARTE */
     .card {
         background: linear-gradient(135deg, #ffe5b6, #afffeb);
-        width: 830px; /* largeur par défaut desktop/mobile portrait */
-        max-width: 95%; /* 🔹 occupe 95% de la largeur sur mobile */
-        height: 1060px;
+        width: 830px;
+        max-width: 95%;
+        height: auto;
         padding: 24px;
         border-radius: 27px;
         box-shadow: 0 12px 30px rgba(0,0,0,0.15);
@@ -28,13 +28,12 @@
         display: flex;
         flex-direction: column;
         border: #ffffff 3px solid;
-
-        /* 🔹 fixe à l'écran */
         position: fixed;
-        top: 50%;           /* centré verticalement */
-        left: 50%;          /* centré horizontalement */
+        top: 50%;
+        left: 50%;
         transform: translate(-50%, -50%);
         z-index: 9999;
+        overflow-y: auto;
     }
 
     /* TITRE */
@@ -57,7 +56,20 @@
         display: block;
     }
 
-    /* CONTENEUR INFOS (CENTRÉ) */
+    .no-photo {
+        width: 373px;
+        height: 373px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ecf0f1;
+        color: #7f8c8d;
+        border-radius: 27px;
+        font-size: 24px;
+        margin: 12px auto 18px;
+    }
+
+    /* CONTENEUR INFOS */
     .info-table {
         width: 100%;
         max-width: 600px;
@@ -72,7 +84,7 @@
         padding: 25px;
         border-bottom: 1px solid #eee;
         font-size: 43px;
-        margin: 12px;
+        margin: 12px 0;
     }
 
     .info-row:last-child {
@@ -92,19 +104,11 @@
         word-break: break-word;
     }
 
-    /* ZONE STATUT EN BAS */
+    /* ZONE STATUT */
     .statut-bloc {
         display: flex;
         justify-content: center;
         margin-top: 20px;
-    }
-
-    .status-container {
-        margin-top: 90px;
-        padding-top: 27px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 
     .badge {
@@ -127,16 +131,17 @@
 
     .invalide {
         background-color: #f44336;
+        padding: 13px;
     }
 
-    /* 🔹 RESPONSIVE MOBILE */
+    /* RESPONSIVE MOBILE */
     @media (max-width: 900px) {
         .card {
-            width: 95%;           /* occupe presque tout l'écran */
+            width: 95%;
             padding: 16px;
         }
 
-        .photo {
+        .photo, .no-photo {
             width: 120px;
             height: 120px;
         }
@@ -156,46 +161,57 @@
         }
     }
 </style>
-
-
 </head>
 
 <body>
 
 <div class="card">
 
-   <b><h1> CARTE D'ETUDIANT NUMERIQUE</h1></b>
+   <h1>CARTE D'ÉTUDIANT NUMÉRIQUE</h1>
 
-    <img src="{{ asset('storage/' . $etudiant->photo) }}" class="photo">
+   {{-- PHOTO --}}
+   @if($etudiant->photo)
+       <img src="{{ Storage::url($etudiant->photo) }}" class="photo" alt="Photo étudiant">
+   @else
+       <div class="no-photo">Aucune photo</div>
+   @endif
 
-    <div class="info-table">
-
+   {{-- INFOS --}}
+   <div class="info-table">
         <div class="info-row">
             <div class="info-label">Nom :</div>
-            <div class="info-value"> <strong>{{ $etudiant->nom }}</strong></div>
+            <div class="info-value"><strong>{{ $etudiant->nom ?? '-' }}</strong></div>
         </div>
 
         <div class="info-row">
             <div class="info-label">Prénom :</div>
-            <div class="info-value"> <strong>{{ $etudiant->prenom }}</strong></div>
+            <div class="info-value"><strong>{{ $etudiant->prenom ?? '-' }}</strong></div>
         </div>
 
         <div class="info-row">
             <div class="info-label">Filière :</div>
-            <div class="info-value"> <strong>{{ $etudiant->filiere->libelle }}</strong> </div>
-        </div><br>
-
-        <div class="statut-bloc"> 
-            <div class="info-value">
-                @if($carte->statut === 'active')
-                    <span class="badge valide">CARTE VALIDE</span>
-                @else
-                    <span class="badge invalide">CARTE INVALIDE</span>
-                @endif
-            </div>
+            <div class="info-value"><strong>{{ $etudiant->filiere->libelle ?? '-' }}</strong></div>
         </div>
 
-    </div>
+        <div class="info-row">
+            <div class="info-label">Niveau :</div>
+            <div class="info-value"><strong>{{ $etudiant->niveau->libelle ?? '-' }}</strong></div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Année Académique :</div>
+            <div class="info-value"><strong>{{ $etudiant->anneeAcademique->libelle ?? '-' }}</strong></div>
+        </div>
+   </div>
+
+   {{-- STATUT --}}
+   <div class="statut-bloc">
+       @if($etudiant->carte && $etudiant->carte->statut === 'active')
+           <span class="badge valide">CARTE VALIDE</span>
+       @else
+           <span class="badge invalide">CARTE INVALIDE</span>
+       @endif
+   </div>
 
 </div>
 

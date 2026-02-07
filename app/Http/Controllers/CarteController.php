@@ -10,6 +10,15 @@ use App\Models\Historique;
 
 class CarteController extends Controller
 {
+
+    public function index()
+    {
+        // On récupère toutes les cartes avec leur étudiant associé
+        $cartes = Carte::with('etudiant')->get();
+
+        // On renvoie la vue avec les cartes
+        return view('cartes.index', compact('cartes'));
+    }
     /**
      * Affiche la carte d'un étudiant
      */
