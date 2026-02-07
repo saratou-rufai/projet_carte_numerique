@@ -14,9 +14,12 @@ class Historique extends Model
     protected $fillable = [
         'carte_id',
         'action',
-        'date_action',
+        'motif', // ajouté pour ton champ optionnel
     ];
 
+    /**
+     * Relation avec la carte
+     */
     public function carte()
     {
         return $this->belongsTo(Carte::class);

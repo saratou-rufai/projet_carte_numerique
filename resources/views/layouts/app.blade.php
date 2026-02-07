@@ -5,94 +5,53 @@
 <title>@yield('titre', 'Carte Étudiant')</title>
 
 <style>
-/* ===== RESET & BODY ===== */
-body {
+html, body {
     margin: 0;
+    padding: 0;
+    height: 100%;
     font-family: Arial, sans-serif;
-    background: #f4f4f4;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
 }
 
-/* ===== HEADER ===== */
+/* Header */
 header {
-    position: sticky;
-    top: 0;
-    width: 100%;
+    position: relative;
     height: 85px;
     background: linear-gradient(90deg, #2a80cf, #5aafff, #2a80cf);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    z-index: 100;
 }
 
-header h1 {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 0;
-    font-size: 25px;
-    color: #ffd194
-}
+.entete-gauche { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); }
+.entete-gauche img { height: 70px; }
 
-header h1 img {
-    height: 70px;
-    width: auto;
+.entete-centre {
+    position: absolute; left: 50%; width: 100%; top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
 }
+.entete-centre h1 { margin: 3px; font-size: 24px; color: #ffd194; }
+.entete-centre h3 { margin: 4px 0 0 0; font-size: 14px; font-weight: normal; color: #fff; }
 
-/* BOUTON TOGGLE MENU */
-#btnToggleMenu {
-    background-color: #ffffff;
-    color: #2a80cf;
-    border: 2px solid #2a80cf;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 200;
-}
-#btnToggleMenu:hover {
-    background-color: #e6f0ff;
-}
+/* Main layout */
+.conteneur-principal { display: flex; height: calc(100% - 85px); }
 
-/* ===== BODY WRAPPER ===== */
-.body-wrapper {
-    display: flex;
-    flex-grow: 1;
-    min-height: calc(100vh - 85px); /* full height minus header */
-}
-
-/* ===== MENU FIXE À GAUCHE ===== */
+/* Menu gauche */
 .menu {
-    flex-shrink: 0;
     width: 250px;
     background-color: #0078bd;
     display: flex;
     flex-direction: column;
-    padding: 15px 0 0 15px;
-    gap: 9px;
-    transition: transform 0.3s ease;
-    position: fixed;
-    top: 85px;
-    bottom: 0;
-    left: 0;
-    z-index: 100;
-
-}
-.menu.hidden {
-    transform: translateX(-100%);
+    padding: 15px 10px;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
-.menu a, .menu form button {
+.menu a,
+.menu form button {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 15px;
+    padding: 12px;
     color: white;
     text-decoration: none;
     font-weight: bold;
@@ -101,81 +60,76 @@ header h1 img {
     cursor: pointer;
     border-radius: 4px;
 }
-.menu a:hover, .menu form button:hover {
+
+.menu a:hover,
+.menu form button:hover {
     background-color: #00598c;
 }
 
 .menu img {
-    width: 27px;
-    height: 27px;
+    width: 26px;
+    height: 26px;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 900px) {
-    .menu {
-        position: fixed;
-        width: 200px;
-        transform: translateX(-100%);
+/* Contenu */
+.contenu {
+    flex: 1;
+    padding: 20px;
+    overflow: auto;
+    background-image: url("{{ asset('images/back_img.png') }}");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
-}
-
 </style>
 </head>
+
 <body>
 
 <header>
-    <h1>
+    <div class="entete-gauche">
         <img src="{{ asset('images/logo.png') }}" alt="UTAB">
-        UNIVERSITE TECHNONOLOGIQUE DU BURKINA | CARTES D'ETUDIANTS NUMERIQUES
-    </h1>
-    <button id="btnToggleMenu">MENU</button>
+    </div>
+    <div class="entete-centre">
+        <h1>CARTES D'ÉTUDIANTS NUMÉRIQUES | UTAB</h1>
+        <h3>UNIVERSITÉ DES TECHNOLOGIES APPLIQUÉES DU BURKINA</h3>
+    </div>
 </header>
 
-<div class="body-wrapper">
-    <!-- MENU FIXE À GAUCHE -->
-    <div class="menu" id="menu">
+<div class="conteneur-principal">
+
+    <div class="menu">
         <a href="{{ route('dashboard') }}">
-            <img src="{{ asset('icones/accueil.png') }}" alt="Accueil"> ACCUEIL
+            <img src="{{ asset('icones/accueil.png') }}"> ACCUEIL
         </a>
         <a href="{{ route('etudiants.index') }}">
-            <img src="{{ asset('icones/etudiant.png') }}" alt="Etudiants"> ETUDIANTS
+            <img src="{{ asset('icones/etudiant.png') }}"> ETUDIANTS
         </a>
         <a href="{{ route('cartes.index') }}">
-            <img src="{{ asset('icones/carte.png') }}" alt="Cartes"> CARTES
+            <img src="{{ asset('icones/carte.png') }}"> CARTES
         </a>
-        <a href="{{ route('historique_cartes.index') }}">
-            <img src="{{ asset('icones/historique.png') }}" alt="Historiques"> HISTORIQUES
+        <a href="{{ route('historiques.index') }}">
+            <img src="{{ asset('icones/historique.png') }}"> HISTORIQUES
         </a>
         <a href="{{ route('users.index') }}">
-            <img src="{{ asset('icones/admin.png') }}" alt="Admin"> ADMINISTRATEURS
+            <img src="{{ asset('icones/admin.png') }}"> ADMINISTRATEURS
         </a>
         <a href="{{ route('parametres.index') }}">
-            <img src="{{ asset('icones/parametres.png') }}" alt="Paramètres"> PARAMETRES
+            <img src="{{ asset('icones/parametres.png') }}"> PARAMETRES
         </a>
         <form action="{{ route('deconnexion') }}" method="POST">
             @csrf
             <button type="submit">
-                <img src="{{ asset('icones/deconnexion.png') }}" alt="Déconnexion"> DÉCONNEXION
+                <img src="{{ asset('icones/deconnexion.png') }}"> DÉCONNEXION
             </button>
         </form>
     </div>
 
-    <!-- CONTENU PRINCIPAL -->
-    <div class="content" id="content">
+    <div class="contenu">
         @yield('contenu')
     </div>
+
 </div>
-
-<script>
-const btnToggleMenu = document.getElementById('btnToggleMenu');
-const menu = document.getElementById('menu');
-const content = document.getElementById('content');
-
-btnToggleMenu.addEventListener('click', function() {
-    menu.classList.toggle('hidden');
-    content.classList.toggle('fullwidth');
-});
-</script>
 
 </body>
 </html>

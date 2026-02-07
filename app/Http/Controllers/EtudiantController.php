@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Etudiant;
+use App\Models\Filiere;
+use App\Models\Niveau;
 use App\Models\Carte;
 use App\Models\AnneeAcademique;
 use Illuminate\Support\Facades\Storage;
@@ -46,9 +48,9 @@ public function afficher(Etudiant $etudiant){
 public function create()
 {
     // Récupérer toutes les filières et niveaux pour les listes déroulantes
-    $filieres = \App\Models\Filiere::all();
-    $niveaux = \App\Models\Niveau::all();
-    $annees_academiques = \App\Models\AnneeAcademique::all();
+    $filieres = Filiere::all();
+    $niveaux = Niveau::all();
+    $annees_academiques = AnneeAcademique::all();
 
     return view('etudiants.creer', compact('filieres', 'niveaux', 'annees_academiques'));
 }

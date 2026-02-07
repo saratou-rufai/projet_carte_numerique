@@ -3,29 +3,27 @@
 @section('contenu')
 
 <style>
-/* ================= CONTENEUR GLOBAL VERTICAL ================= */
+/* ================= CONTENEUR GLOBAL ================= */
 .page-carte {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* ===================== PARTIE 1 : CARTE ===================== */
+/* ================= CARTE ================= */
 .carte-container {
     width: 100mm;
     height: 63mm;
     padding: 5mm;
-    /* background: linear-gradient(135deg, #674d00, #467e35); */
     border-radius: 5mm;
     box-shadow: 0 12px 30px rgba(0,0,0,0.5);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #fff;
     position: relative;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-
     background-image: url("{{ asset('images/carte-back.jpg') }}");
     background-size: cover;
     background-position: center;
@@ -46,15 +44,12 @@
     text-align: center;
     font-size: 5mm;
     font-weight: 800;
-    letter-spacing: 1px;
     margin-bottom: 3mm;
-    text-transform: uppercase;
 }
 
 .carte-num {
     text-align: center;
     font-size: 4.7mm;
-    opacity: 0.9;
     margin-bottom: 4mm;
 }
 
@@ -66,7 +61,6 @@
 
 .carte-left {
     width: 50%;
-    text-align: center;
     background: rgba(107, 63, 22, 0.33);
     border-radius: 4mm;
     padding: 5mm;
@@ -74,19 +68,9 @@
     flex-direction: column;
     justify-content: space-between;
     font-size: 3.7mm;
+    text-align: center;
 }
 
-.carte-info {
-    margin-bottom: 2mm;
-}
-
-.carte-info strong {
-    display: block;
-    font-size: 3mm;
-    opacity: 0.85;
-}
-
-/* ===== STATUT CARTE ===== */
 .statut span {
     display: inline-block;
     padding: 2mm 4mm;
@@ -117,15 +101,14 @@
     justify-content: center;
 }
 
-/* ===================== PARTIE 2 : ACTIONS ===================== */
+/* ================= ACTIONS ================= */
 .actions-zone {
     width: 110mm;
     max-width: 95%;
     padding: 20px;
-    margin-top: 30px;              /* espace entre la carte et la zone */
+    margin-top: 30px;
     background: #f4f6f8;
     border-radius: 10px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -134,117 +117,83 @@
 .status-group {
     display: flex;
     gap: 18px;
-    justify-content: center;
-    flex-wrap: nowrap;
-    margin-bottom: 30px; /* espace entre radios et boutons */
+    margin-bottom: 25px;
 }
 
 .status-group label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
     cursor: pointer;
+    font-weight: bold;
 }
 
-/* Boutons centrés et alignés horizontalement */
 .boutons {
     display: flex;
     gap: 15px;
-    justify-content: center;
-    flex-wrap: nowrap;
 }
 
-/* ================= PRINT PDF ================= */
+.boutons button,
+.boutons a {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+    transition: 0.2s;
+}
+
+.boutons button:hover,
+.boutons a:hover {
+    opacity: 0.85;
+}
+
+.boutons button[type="submit"] { background: #28a745; } /* vert valider */
+.boutons button.print-button { background: #3498db; }      /* bleu imprimer */
+.boutons a { background: #6c757d; }                         /* gris voir */
+
+/* ================= IMPRIMÉ ================= */
 @media print {
-
-    body * {
-        visibility: hidden; /* Tout cacher */
-    }
-
-    .carte-container, .carte-container * {
-        visibility: visible; /* Afficher uniquement la carte */
-    }
-
-    .header, .footer {
-        display: none;
-    }
-
+    body * { visibility: hidden; }
+    .carte-container, .carte-container * { visibility: visible; }
     .carte-container {
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%); /* Centre sur la page */
-        margin: 0;
-        width: 100mm;       /* Largeur exacte */
-        height: 63mm;       /* Hauteur exacte */
-        padding: 5mm;
-        display: flex;
-        flex-direction: column;
+        width: 100mm;
+        height: 63mm;
+        transform: translate(-50%, -50%);
         box-shadow: none;
-        background-image: url("{{ asset('images/carte-back.jpg') }}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        color: #fff;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        -webkit-print-color-adjust: exact; /* Fond visible dans le PDF */
+        overflow: hidden;
+        -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
-
-    .carte-container::before {
-        content: "";
-        position: absolute;
-        width: 60mm;
-        height: 60mm;
-        background: rgba(255,255,255,0.08);
-        border-radius: 37%;
-        top: -30mm;
-        right: -25mm;
-    }
-
-    /* Supprimer tout sauf la carte */
-    .actions-zone, .page-carte > *:not(.carte-container) {
-        display: none !important;
-    }
+    .actions-zone { display: none; } /* Cacher les boutons */
 }
-
 </style>
 
 <div class="page-carte">
 
-    {{-- ================= PARTIE SUPÉRIEURE : LA CARTE ================= --}}
+    {{-- ================= CARTE ================= --}}
     <div class="carte-container">
-
-        <div class="carte-header">
-            CARTE D'ÉTUDIANT NUMÉRIQUE
-        </div>
+        <div class="carte-header">CARTE D'ÉTUDIANT NUMÉRIQUE</div>
 
         <div class="carte-num">
-            ... ....... ....... ....... N° {{ $carte->numero }} ....... ....... ....... ...
+            N° {{ $carte->numero }}
         </div>
 
         <div class="carte-body">
-
             <div class="carte-left">
                 <div>
-                    <div class="carte-info">
-                        Date de création <br>
-                        {{ \Carbon\Carbon::parse($carte->date_creation)->format('d-m-Y') }}
-                    </div>
+                    Date de création<br>
+                    {{ \Carbon\Carbon::parse($carte->date_creation)->format('d-m-Y') }}<br><br>
 
-                    <div class="carte-info">
-                        Date d'expiration <br>
-                        {{ \Carbon\Carbon::parse($carte->date_expiration)->format('d-m-Y') }}
-                    </div>
+                    Date d'expiration<br>
+                    {{ \Carbon\Carbon::parse($carte->date_expiration)->format('d-m-Y') }}
                 </div>
 
                 <div class="statut">
                     <span class="{{ $carte->statut }}">
-                        @if($carte->statut === 'active') 🟢 ACTIVE
-                        @elseif($carte->statut === 'suspendue') 🟠 SUSPENDUE
-                        @elseif($carte->statut === 'expiree') 🔴 EXPIREE
-                        @endif
+                        {{ strtoupper($carte->statut) }}
                     </span>
                 </div>
             </div>
@@ -254,97 +203,63 @@
                     {!! QrCode::size(120)->generate($lien_public) !!}
                 </div>
             </div>
-
         </div>
     </div>
 
-    {{-- ================= PARTIE INFÉRIEURE : ACTIONS ================= --}}
+    {{-- ================= ACTIONS ================= --}}
+    <div class="actions-zone">
 
-<div class="actions-zone">
+        <form id="statutForm" method="POST" action="{{ route('cartes.statut', $carte->id) }}">
+            @csrf
 
-    <form method="POST" action="{{ route('cartes.statut', $carte->id) }}">
-        @csrf
+            {{-- Radios pour changer le statut --}}
+            <div class="status-group">
+                <label>
+                    <input type="radio" name="statut" value="active" {{ $carte->statut === 'active' ? 'checked' : '' }}>
+                    Activer
+                </label>
 
-        <!-- Radios en haut -->
-<form method="POST" action="{{ route('cartes.statut', $carte->id) }}">
-    @csrf
+                <label>
+                    <input type="radio" name="statut" value="suspendue" {{ $carte->statut === 'suspendue' ? 'checked' : '' }}>
+                    Suspendre
+                </label>
 
-    <div class="status-group">
-        <label>
-            <input type="radio" name="statut" value="active"
-                   {{ $carte->statut === 'active' ? 'checked' : '' }}>
-            <b> Activer </b>
-        </label>
+                <label>
+                    <input type="radio" name="statut" value="expiree" {{ $carte->statut === 'expiree' ? 'checked' : '' }}>
+                    Expirer
+                </label>
+            </div>
 
-        <label>
-            <input type="radio" name="statut" value="suspendue"
-                   {{ $carte->statut === 'suspendue' ? 'checked' : '' }}>
-            <b> Suspendre </b>
-        </label>
-
-        <label>
-            <input type="radio" name="statut" value="expiree"
-                   {{ $carte->statut === 'expiree' ? 'checked' : '' }}>
-            <b> Expirer </b>
-        </label>
+            {{-- Boutons --}}
+            <div class="boutons">
+                <button type="button" class="print-button" onclick="window.print()">🖨️ Imprimer carte</button>
+                <a href="{{ route('vue_publique', $carte->qr_code) }}" target="_blank">👁️ Voir étudiant</a>
+            </div>
+        </form>
     </div>
-
-</form>
-
-    </form>
-
-            <!-- Boutons en bas -->
-        <div class="boutons">
-            <!-- <button type="submit" class="btn-print">💾 Valider statut </button> -->
-            <button type="button" class="btn-print" onclick="window.print()">🖨️ Imprimer la carte </button>
-            <form action="{{ route('vue_publique', $carte->qr_code) }}" method="GET" style="display:inline;">
-            <button type="submit" class="btn-print">👁️ Afficher l'étudiant</button>
-            </form>
-        </div>
-
 </div>
-
-</div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-
-    const form = document.querySelector('form');
-    let statutInitial = document.querySelector('input[name="statut"]:checked')?.value;
+    const form = document.getElementById('statutForm');
+    let statutInitial = document.querySelector('input[name="statut"]:checked').value;
 
     document.querySelectorAll('input[name="statut"]').forEach(radio => {
-
         radio.addEventListener('click', function (e) {
-
-            // Si on clique sur le statut déjà actif → rien
-            if (this.value === statutInitial) {
-                return;
-            }
-
-            // Empêche le changement immédiat
+            if (this.value === statutInitial) return;
             e.preventDefault();
 
-            const confirmation = confirm(
-                "Confirmer le changement de statut vers : " + this.value.toUpperCase() + " ?"
-            );
-
-            if (confirmation) {
+            if (confirm("Confirmer le changement vers " + this.value.toUpperCase() + " ?")) {
                 this.checked = true;
                 statutInitial = this.value;
-
-                // soumission automatique
                 form.submit();
             } else {
-                // restauration de l'ancien état
                 document.querySelectorAll('input[name="statut"]').forEach(r => {
                     r.checked = (r.value === statutInitial);
                 });
             }
         });
-
     });
-
 });
 </script>
 

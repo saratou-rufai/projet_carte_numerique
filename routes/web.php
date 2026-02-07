@@ -15,14 +15,6 @@ use App\Http\Controllers\ParametreController;
 
 /*
 |--------------------------------------------------------------------------
-| Routes Web
-|--------------------------------------------------------------------------
-| Organisation professionnelle des routes publiques et privées
-|--------------------------------------------------------------------------
-*/
-
-/*
-|--------------------------------------------------------------------------
 | ROUTES PUBLIQUES
 |--------------------------------------------------------------------------
 | Accès sans authentification
@@ -162,4 +154,9 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::get('/historique-cartes', [HistoriqueController::class, 'index'])
         ->name('historique_cartes.index');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/historiques', [HistoriqueController::class, 'index'])
+        ->name('historiques.index');
 });

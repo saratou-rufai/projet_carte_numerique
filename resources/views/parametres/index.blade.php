@@ -1,87 +1,73 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Paramètres généraux</title>
+@extends('layouts.app')
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #dbf1ff;
-            margin: 35px;
-            padding: 30px;
-        }
+@section('contenu')
 
-        h1 { text-align: center; margin-bottom: 30px; }
+<style>
+/* Styles spécifiques à la page Paramètres */
+.container-parametres {
+    max-width: 1000px;
+    margin: auto;
+    padding: 30px;
+}
 
-        .container { max-width: 1000px; margin: auto; }
+h1 { text-align: center; margin-bottom: 30px; }
 
-        .bloc {
-            background: #e7f9ff;
-            padding: 20px;
-            margin-bottom: 55px;
-            border-radius: 6px;
-            box-shadow: 0 7px 13px rgba(0, 0, 0, 0.23);
-        }
+.bloc {
+    background: #e7f9ff;
+    padding: 20px;
+    margin-bottom: 55px;
+    border-radius: 6px;
+    box-shadow: 0 7px 13px rgba(0, 0, 0, 0.23);
+}
 
-        .bloc h2 {
-            text-align: center;
-            margin-top: 0;
-            border-bottom: 2px solid #6693c6;
-            padding-bottom: 10px;
-        }
+.bloc h2 {
+    text-align: center;
+    margin-top: 0;
+    border-bottom: 2px solid #6693c6;
+    padding-bottom: 10px;
+}
 
-        label { font-weight: bold; display: block; margin-bottom: 5px; }
+label { font-weight: bold; display: block; margin-bottom: 5px; }
 
-        input[type="text"],
-        input[type="number"] { width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ccc; }
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
 
-        button {
-            padding: 8px 15px;
-            background: #2c7be5;
-            border: none;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+button {
+    padding: 8px 15px;
+    background: #2c7be5;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
-        button:hover { background: #1a5fc4; }
+button:hover { background: #1a5fc4; }
 
-        table { width: 100%; text-align: center; border-collapse: collapse; margin-top: 15px; }
-        table th, table td { border: 1px solid #ddd; padding: 8px; }
-        table th { background: #f0f0f0; }
+table { width: 100%; text-align: center; border-collapse: collapse; margin-top: 15px; }
+table th, table td { border: 1px solid #ddd; padding: 8px; }
+table th { background: #f0f0f0; }
 
-        .btn-danger { background: #dc3545; }
-        .btn-danger:hover { background: #b52a37; }
+.btn-danger { background: #dc3545; }
+.btn-danger:hover { background: #b52a37; }
 
-        .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 4px; margin-bottom: 20px; }
+.success { background: #d4edda; color: #155724; padding: 10px; border-radius: 4px; margin-bottom: 20px; }
 
-        .actions form { display: inline-block; }
-    </style>
-</head>
+.actions form { display: inline-block; }
+</style>
 
-<body>
-
-<div class="container">
+<div class="container-parametres">
     <h1>Paramètres généraux</h1>
 
     {{-- MESSAGE SUCCÈS --}}
     @if(session('success'))
         <div class="success">{{ session('success') }}</div>
     @endif
-
-    {{-- 🔹 DURÉE --}}
-    <!-- <div class="bloc">
-        <h2>Durée de validité des cartes</h2>
-        <form method="POST" action="{{ route('parametres.duree.mettre_a_jour') }}">
-            @csrf
-            <label>Durée (en années)</label>
-            <input type="number" name="duree_validite_carte"
-                   value="{{ $parametre->duree_validite_carte ?? '' }}"
-                   required min="1">
-            <button type="submit">Valider</button>
-        </form>
-    </div> -->
 
     {{-- 🔹 FILIÈRES --}}
     <div class="bloc">
@@ -175,5 +161,4 @@
 
 </div>
 
-</body>
-</html>
+@endsection

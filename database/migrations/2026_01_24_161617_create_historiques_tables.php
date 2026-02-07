@@ -14,13 +14,9 @@ return new class extends Migration
 Schema::create('historiques', function (Blueprint $table) {
     $table->id();
     $table->foreignId('carte_id')->constrained()->cascadeOnDelete();
-    $table->foreignId('utilisateur_id')
-          ->constrained('users')
-          ->cascadeOnDelete();
     $table->enum('action', [
-        'creation',
+        'activation',
         'suspension',
-        'reactivation',
         'expiration'
     ]);
     $table->string('motif')->nullable();

@@ -2,22 +2,17 @@
 
 @section('contenu')
 <style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        padding: 50px 20px;
-    }
-
+    /* ===== Conteneur de page ===== */
     .container {
         width: 600px;
+        max-width: 90%;
         background-color: #fff;
         padding: 40px;
         border-radius: 12px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+
+        /* Centre verticalement et horizontalement par rapport à la zone content du layout */
+        margin: 50px auto;
     }
 
     h1 {
@@ -112,7 +107,7 @@
 
     <form action="{{ route('etudiants.mettre_a_jour', $etudiant->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
-        @method('PUT') {{-- Méthode PUT pour modification --}}
+        @method('PUT')
 
         <div class="form-group">
             <label for="nom">Nom</label>
