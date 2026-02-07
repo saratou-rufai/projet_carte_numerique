@@ -15,9 +15,6 @@ use App\Http\Controllers\parametreController;
 |--------------------------------------------------------------------------
 | Routes Web
 |--------------------------------------------------------------------------
-|
-| Routes organisées pour l'administration et l'accès public
-|
 */
 
 // Page d'accueil (publique)
@@ -88,7 +85,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
     });
-});
+    });
 
 
     // ================= UTILISATEURS =================
@@ -116,18 +113,21 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [CarteController::class, 'index'])->name('index');
         Route::get('/{carte}/modifier', [CarteController::class, 'edit'])->name('modifier');
         Route::put('/{carte}', [CarteController::class, 'update'])->name('mettre_a_jour');
-    });
 
-    // ================= HISTORIQUE DES CARTES =================
+    
+            // ================= HISTORIQUE DES CARTES =================
     Route::get('/historique-cartes', [HistoriqueController::class, 'index'])
         ->name('historique_cartes.index');
 
-// ================= ROUTE PUBLIQUE =================
-Route::get('/carte-publique/{qr_code}', [CarteController::class, 'showPublic'])
-    ->name('cartes.publique');
+    // ================= ROUTE PUBLIQUE =================
+    Route::get('/carte-publique/{qr_code}', [CarteController::class, 'showPublic'])
+        ->name('cartes.publique');
 
-    // Liste des cartes
-Route::get('/cartes', [CarteController::class, 'index'])->name('cartes.index');
+        // Liste des cartes
+    Route::get('/cartes', [CarteController::class, 'index'])->name('cartes.index');
 
-// Page publique d'une carte
-Route::get('/cartes/public/{uuid}', [CarteController::class, 'vue_public'])->name('cartes.public');
+    // Page publique d'une carte
+    Route::get('/cartes/public/{uuid}', [CarteController::class, 'vue_public'])->name('cartes.public');
+
+});
+
