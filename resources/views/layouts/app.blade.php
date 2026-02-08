@@ -111,9 +111,6 @@ header {
         <a href="{{ route('historiques.index') }}">
             <img src="{{ asset('icones/historique.png') }}"> HISTORIQUES
         </a>
-        <a href="{{ route('users.index') }}">
-            <img src="{{ asset('icones/admin.png') }}"> ADMINISTRATEURS
-        </a>
         <a href="{{ route('parametres.index') }}">
             <img src="{{ asset('icones/parametres.png') }}"> PARAMETRES
         </a>
